@@ -1,5 +1,5 @@
 /*Proyecto Final Base de Datos I*/
-/*Creación de Roles*/
+/*CreaciÃ³n de Roles*/
 CREATE ROLE Administrator;
 CREATE ROLE Reader;
 /*Asignar Permismos a Roles*/
@@ -23,8 +23,16 @@ CREATE TABLE departamento (
 
 ALTER TABLE departamento ADD CONSTRAINT departamento_pk PRIMARY KEY ( id_dep );
 
+CREATE TABLE sede (
+    sede_id       NUMBER NOT NULL,
+    nombre_sede   VARCHAR2(50) NOT NULL
+);
+
+ALTER TABLE sede ADD CONSTRAINT sede_pk PRIMARY KEY ( sede_id );
+
 CREATE SEQUENCE ID_DEP
 MINVALUE 1
+
 NOMAXVALUE
 START WITH 1
 NOCYCLE
