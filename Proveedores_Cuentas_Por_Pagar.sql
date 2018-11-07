@@ -15,3 +15,18 @@ GRANT Administrator TO INGENIEROL3
 GRANT INVITADO TO Reader;
 
 
+/* Crear tablas, constraints, index, foreign */
+CREATE TABLE departamento (
+    id_dep       INTEGER NOT NULL,
+    nombre_dep   VARCHAR2(25) NOT NULL
+);
+
+ALTER TABLE departamento ADD CONSTRAINT departamento_pk PRIMARY KEY ( id_dep );
+
+CREATE SEQUENCE ID_DEP
+MINVALUE 1
+NOMAXVALUE
+START WITH 1
+NOCYCLE
+CACHE  20
+NOORDER;
