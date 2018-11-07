@@ -23,14 +23,6 @@ CREATE TABLE departamento (
 
 ALTER TABLE departamento ADD CONSTRAINT departamento_pk PRIMARY KEY ( id_dep );
 
-CREATE SEQUENCE ID_DEP
-MINVALUE 1
-NOMAXVALUE
-START WITH 1
-NOCYCLE
-CACHE  20
-NOORDER;
-
 CREATE TABLE proveedor (
     nit_pro               INTEGER NOT NULL,
     nombre_pro            VARCHAR2(30) NOT NULL,
@@ -42,14 +34,6 @@ CREATE TABLE proveedor (
 
 ALTER TABLE proveedor ADD CONSTRAINT pro_pk PRIMARY KEY ( nit_pro );
 
-CREATE SEQUENCE ID_PRO
-MINVALUE 1
-NOMAXVALUE
-START WITH 1
-NOCYCLE
-CACHE  20
-NOORDER;
-
 ALTER TABLE proveedor
     ADD CONSTRAINT proveedor_departamento_fk FOREIGN KEY ( departamento_id_dep )
         REFERENCES departamento ( id_dep )
@@ -58,9 +42,6 @@ ALTER TABLE proveedor
 select nit_pro, nombre_pro,telefono_pro,correo_pro,direccion_pro, nombre_dep
 from proveedor
 join departamento on proveedor.departamento_id_dep = departamento.id_dep;
-
-
-
 
 CREATE TABLE sede (
     sede_id       NUMBER NOT NULL,
@@ -71,7 +52,22 @@ ALTER TABLE sede ADD CONSTRAINT sede_pk PRIMARY KEY ( sede_id );
 
 CREATE SEQUENCE ID_DEP
 MINVALUE 1
+NOMAXVALUE
+START WITH 1
+NOCYCLE
+CACHE  20
+NOORDER;
 
+CREATE SEQUENCE ID_PRO
+MINVALUE 1
+NOMAXVALUE
+START WITH 1
+NOCYCLE
+CACHE  20
+NOORDER;
+
+CREATE SEQUENCE ID_SE
+MINVALUE 1
 NOMAXVALUE
 START WITH 1
 NOCYCLE
