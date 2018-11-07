@@ -14,7 +14,6 @@ CREATE USER INGENIEROL3 IDENTIFIED BY 1NG3N13R0DB2018**;
 GRANT Administrator TO INGENIEROL3
 GRANT INVITADO TO Reader;
 
-
 /* Crear tablas, constraints, index, foreign */
 CREATE TABLE departamento (
     id_dep       INTEGER NOT NULL,
@@ -39,10 +38,6 @@ ALTER TABLE proveedor
         REFERENCES departamento ( id_dep )
             ON DELETE CASCADE;
                        
-select nit_pro, nombre_pro,telefono_pro,correo_pro,direccion_pro, nombre_dep
-from proveedor
-join departamento on proveedor.departamento_id_dep = departamento.id_dep;
-
 CREATE TABLE sede (
     sede_id       NUMBER NOT NULL,
     nombre_sede   VARCHAR2(50) NOT NULL
@@ -73,3 +68,7 @@ START WITH 1
 NOCYCLE
 CACHE  20
 NOORDER;
+
+select nit_pro, nombre_pro,telefono_pro,correo_pro,direccion_pro, nombre_dep
+from proveedor
+join departamento on proveedor.departamento_id_dep = departamento.id_dep;
