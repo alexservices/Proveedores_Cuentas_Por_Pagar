@@ -233,10 +233,3 @@ select nombre_dep as d,
  
  /*------------------------------*/
  
- /*para mostar datos de un cambo de una tabla*/ 
- 
- 
-select orden_factura_or as d,
-       correlativo_apa as r
-  from a_pagar
- order by 1
