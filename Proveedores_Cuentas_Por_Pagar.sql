@@ -13,15 +13,62 @@ CREATE USER INGENIEROL3 IDENTIFIED BY 1NG3N13R0DB2018**;
 /*Asignar Roles A Usuarios */
 GRANT Administrator TO INGENIEROL3
 GRANT INVITADO TO Reader;
+/*-----------------*/
 
+/* Creacion de Tablas*/
+CREATE TABLE a_pagar (
+    correlativo_apa    INTEGER NOT NULL,
+    orden_factura_or   INTEGER NOT NULL,
+    estado_p_id_epa    INTEGER NOT NULL,
+    total_a_pagar      NUMBER
+);
 
-/* Crear tablas, constraints, index, foreign */
+CREATE TABLE cuenta_cliente (
+    id_cuenta           INTEGER NOT NULL,
+    nombre_cuenta       VARCHAR2(30) NOT NULL,
+    saldo               NUMBER,
+    proveedor_nit_pro   INTEGER NOT NULL,
+    sede_id_se          INTEGER NOT NULL
+);
+
+CREATE TABLE cuenta_cliente (
+    id_cuenta           INTEGER NOT NULL,
+    nombre_cuenta       VARCHAR2(30) NOT NULL,
+    saldo               NUMBER,
+    proveedor_nit_pro   INTEGER NOT NULL,
+    sede_id_se          INTEGER NOT NULL
+);
+
 CREATE TABLE departamento (
     id_dep       INTEGER NOT NULL,
     nombre_dep   VARCHAR2(25) NOT NULL
 );
 
-ALTER TABLE departamento ADD CONSTRAINT departamento_pk PRIMARY KEY ( id_dep );
+CREATE TABLE estado_p (
+    id_epa            INTEGER NOT NULL,
+    descripcion_epa   VARCHAR2(20) NOT NULL
+);
+
+CREATE TABLE metodo_pago (
+    id_metodo       INTEGER NOT NULL,
+    descripcion_m   VARCHAR2(15) NOT NULL
+);
+
+CREATE TABLE orden (
+    factura_or                 INTEGER NOT NULL,
+    fecha_emision              DATE NOT NULL,
+    fecha_lim_pago             DATE NOT NULL,
+    cuenta_cliente_id_cuenta   INTEGER NOT NULL,
+    total                      NUMBER
+);
+
+CREATE TABLE pagos (
+    correlativo_pa            INTEGER NOT NULL,
+    fecha_pa                  DATE NOT NULL,
+    abono_pa                  NUMBER,
+    metodo_pago_id_metodo     INTEGER NOT NULL,
+    a_pagar_correlativo_apa   INTEGER NOT NULL
+);
 
 CREATE TABLE proveedor (
     nit_pro               INTEGER NOT NULL,
@@ -32,44 +79,78 @@ CREATE TABLE proveedor (
     departamento_id_dep   INTEGER NOT NULL
 );
 
-ALTER TABLE proveedor ADD CONSTRAINT pro_pk PRIMARY KEY ( nit_pro );
+CREATE TABLE sede (
+    id_se                 INTEGER NOT NULL,
+    nombre_se             VARCHAR2(30) NOT NULL,
+    telefono_se           NUMBER(8) NOT NULL,
+    correo_se             VARCHAR2(30) NOT NULL,
+    direccion_se          VARCHAR2(40) NOT NULL,
+    departamento_id_dep   INTEGER NOT NULL
+);
+
+*/------------------------------------/*
+
+/* aqui empiezan los PRIMARY KEY */
+
+ALTER TABLE a_pagar ADD CONSTRAINT a_pagar_pk PRIMARY KEY ( correlativo_apa );
+
+ALTER TABLE cuenta_cliente ADD CONSTRAINT cuenta_cliente_pk PRIMARY KEY ( id_cuenta );
+
+ALTER TABLE departamento ADD CONSTRAINT departamento_pk PRIMARY KEY ( id_dep );
+
+ALTER TABLE estado_p ADD CONSTRAINT estado_p_pk PRIMARY KEY ( id_epa );
+
+ALTER TABLE metodo_pago ADD CONSTRAINT metodo_pago_pk PRIMARY KEY ( id_metodo );
+
+ALTER TABLE orden ADD CONSTRAINT orden_pk PRIMARY KEY ( factura_or );
+
+ALTER TABLE pagos ADD CONSTRAINT pagos_pk PRIMARY KEY ( correlativo_pa );
+
+ALTER TABLE proveedor ADD CONSTRAINT proveedor_pk PRIMARY KEY ( nit_pro );
+
+ALTER TABLE sede ADD CONSTRAINT sede_pk PRIMARY KEY ( id_se );
+
+/* los FOREIGN KEY */
+
+ALTER TABLE a_pagar
+    ADD CONSTRAINT a_pagar_estado_p_fk FOREIGN KEY ( estado_p_id_epa )
+        REFERENCES estado_p ( id_epa )
+            ON DELETE CASCADE;
+
+ALTER TABLE a_pagar
+    ADD CONSTRAINT a_pagar_orden_fk FOREIGN KEY ( orden_factura_or )
+        REFERENCES orden ( factura_or );
+
+ALTER TABLE cuenta_cliente
+    ADD CONSTRAINT cuenta_cliente_proveedor_fk FOREIGN KEY ( proveedor_nit_pro )
+        REFERENCES proveedor ( nit_pro )
+            ON DELETE CASCADE;
+
+ALTER TABLE cuenta_cliente
+    ADD CONSTRAINT cuenta_cliente_sede_fk FOREIGN KEY ( sede_id_se )
+        REFERENCES sede ( id_se )
+            ON DELETE CASCADE;
+
+ALTER TABLE orden
+    ADD CONSTRAINT orden_cuenta_cliente_fk FOREIGN KEY ( cuenta_cliente_id_cuenta )
+        REFERENCES cuenta_cliente ( id_cuenta )
+            ON DELETE CASCADE;
+
+ALTER TABLE pagos
+    ADD CONSTRAINT pagos_a_pagar_fk FOREIGN KEY ( a_pagar_correlativo_apa )
+        REFERENCES a_pagar ( correlativo_apa )
+            ON DELETE CASCADE;
+
+ALTER TABLE pagos
+    ADD CONSTRAINT pagos_metodo_pago_fk FOREIGN KEY ( metodo_pago_id_metodo )
+        REFERENCES metodo_pago ( id_metodo );
 
 ALTER TABLE proveedor
     ADD CONSTRAINT proveedor_departamento_fk FOREIGN KEY ( departamento_id_dep )
         REFERENCES departamento ( id_dep )
             ON DELETE CASCADE;
-                       
-select nit_pro, nombre_pro,telefono_pro,correo_pro,direccion_pro, nombre_dep
-from proveedor
-join departamento on proveedor.departamento_id_dep = departamento.id_dep;
 
-CREATE TABLE sede (
-    sede_id       NUMBER NOT NULL,
-    nombre_sede   VARCHAR2(50) NOT NULL
-);
-
-ALTER TABLE sede ADD CONSTRAINT sede_pk PRIMARY KEY ( sede_id );
-
-CREATE SEQUENCE ID_DEP
-MINVALUE 1
-NOMAXVALUE
-START WITH 1
-NOCYCLE
-CACHE  20
-NOORDER;
-
-CREATE SEQUENCE ID_PRO
-MINVALUE 1
-NOMAXVALUE
-START WITH 1
-NOCYCLE
-CACHE  20
-NOORDER;
-
-CREATE SEQUENCE ID_SE
-MINVALUE 1
-NOMAXVALUE
-START WITH 1
-NOCYCLE
-CACHE  20
-NOORDER;
+ALTER TABLE sede
+    ADD CONSTRAINT sede_departamento_fk FOREIGN KEY ( departamento_id_dep )
+        REFERENCES departamento ( id_dep )
+            ON DELETE CASCADE;
