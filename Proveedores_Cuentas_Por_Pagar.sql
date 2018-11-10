@@ -31,13 +31,6 @@ CREATE TABLE cuenta_cliente (
     sede_id_se          INTEGER NOT NULL
 );
 
-CREATE TABLE cuenta_cliente (
-    id_cuenta           INTEGER NOT NULL,
-    nombre_cuenta       VARCHAR2(30) NOT NULL,
-    saldo               NUMBER,
-    proveedor_nit_pro   INTEGER NOT NULL,
-    sede_id_se          INTEGER NOT NULL
-);
 
 CREATE TABLE departamento (
     id_dep       INTEGER NOT NULL,
@@ -154,3 +147,96 @@ ALTER TABLE sede
     ADD CONSTRAINT sede_departamento_fk FOREIGN KEY ( departamento_id_dep )
         REFERENCES departamento ( id_dep )
             ON DELETE CASCADE;
+
+/* CREACION DE SECUENCIAS */
+
+ CREATE SEQUENCE   "ID_APA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 21 CACHE 20 ORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_CUENTA"  MINVALUE 888 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 968 CACHE 20 ORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_DEP"  MINVALUE 1 MAXVALUE 30 INCREMENT BY 1 START WITH 21 NOCACHE  ORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_EPA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 41 CACHE 20 NOORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_M"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 41 CACHE 20 NOORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_ORDEN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 161 CACHE 20 ORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_PA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 21 CACHE 20 ORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_PRO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 81 CACHE 20 NOORDER  NOCYCLE  NOPARTITION
+/
+
+CREATE SEQUENCE   "ID_SE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 41 CACHE 20 NOORDER  NOCYCLE  NOPARTITION
+/
+
+/*Procesamiento para setear datos en la tabla A_Pagar*/
+
+insert into a_pagar (correlativo_apa,orden_factura_or,estado_p_id_epa,total_a_pagar)  
+values (id_apa.nextval,:P47_FACTURA_OR,2,:P47_TOTAL)
+
+
+/*Procesamiento para actualizar en la tabla cuenta_cliente 
+el saldo de una cuenta cuando se cree una factura de una orden*/
+
+update cuenta_cliente set saldo= :P47_TOTAL+cuenta_cliente.saldo where id_cuenta = :P47_CUENTA_CLIENTE_ID_CUENTA
+
+/*List View en apex */
+select orden_factura_or as d,
+       correlativo_apa as r
+  from a_pagar
+ order by 1
+ 
+/*---*/ 
+ select nombre_cuenta as d,
+       id_cuenta as r
+  from cuenta_cliente
+ order by 1
+
+/*--*/
+
+select nombre_dep as d,
+       id_dep as r
+  from departamento
+ order by 1
+ 
+ /*--*/select nombre_se as d,
+       id_se as r
+  from sede 
+ order by 1;
+ 
+ select descripcion_m as d,
+       id_metodo as r
+  from metodo_pago
+ order by 1
+ 
+ /*--*/
+ 
+ select nombre_pro as d,
+       nit_pro as r
+  from proveedor
+ order by 1
+ 
+ /*--*/
+ 
+ select nombre_se as d,
+       id_se as r
+  from sede 
+ order by 1;
+ 
+ /*------------------------------*/
+ 
+ /*para mostar datos de un cambo de una tabla*/ 
+ 
+ 
+select orden_factura_or as d,
+       correlativo_apa as r
+  from a_pagar
+ order by 1
